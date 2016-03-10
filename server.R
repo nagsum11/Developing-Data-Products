@@ -1,15 +1,19 @@
 #install.packages("shiny") 
  library(shiny) 
  
- #print(number) 
-  
  shinyServer(  
            function(input, output) { 
-                     output$inputValue <- renderPrint({as.numeric(input$guess1)}) 
-                    
-                               output$outputValue <- renderText({ 
-                               if (input$goButton == 0 ) "You have not entered a number yet" 
-                               else if (input$goButton >= 1) as.numeric(input$guess1)+as.numeric(input$guess2)
-                       }) 
-             } 
-   ) 
+             out <- reactive({
+               if(input$operation == 1){
+                 sum(c(input$Input1, input$Input2, input$Input3))
+               }
+               else if(input$operation == 2){
+                 mean(c(input$Input1, input$Input2, input$Input3))
+               }
+               else if(input$operation == 3){
+                 median(c(input$Input1, input$Input2, input$Input3))
+               }
+             })
+             output$results <- renderPrint({out()})
+           }
+ )
